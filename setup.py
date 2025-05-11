@@ -7,7 +7,6 @@ def get_version():
                 return line.split("=")[1].strip().strip('"\'')
     raise RuntimeError("Unable to find version string.")
 
-
 setup(
     name="Franko",
     version=get_version(),
@@ -22,15 +21,14 @@ setup(
         ]
     },
     classifiers=[
-        'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',
-        'Topic :: Text Processing :: Linguistic',
-        'License :: OSI Approved :: MIT License',
         'Programming Language :: Python :: 3',
+        'License :: OSI Approved :: MIT License',
         'Operating System :: OS Independent',
+        'Topic :: Text Processing :: Linguistic',
     ],
     include_package_data=True,
-    description="A project for adding an information block to an MS .docx file",
+    description="Project for declension of Ukrainian names",
     long_description=open("README.md", encoding="utf-8").read(),
     long_description_content_type="text/markdown",
     author="Danila Aleksandrov",

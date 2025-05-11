@@ -1,4 +1,3 @@
-// build.js
 require('esbuild').buildSync({
   entryPoints: ['decline.js'],
   bundle: true,

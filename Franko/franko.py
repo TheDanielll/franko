@@ -3,6 +3,7 @@ import json
 import shutil
 import os
 
+
 class Franko:
     """
     Клас для відмінювання українських імен та прізвищ за допомогою shevchenko.js.
@@ -12,15 +13,15 @@ class Franko:
       - Ім'я По-батькові  (без прізвища)
       Прізвище - По-батькові  (без імені)  # але тоді ім'я обов'язкове
     """
-    def __init__(self, text: str = None, gender: str = 'masculine'):
+    def __init__(self, name: str = None, gender: str = 'masculine'):
         """
-        :param text: рядок у форматі "прізвище ім'я по-батькові";
+        :param name: рядок у форматі "прізвище ім'я по-батькові";
                      для пропуску використовуйте "-" у потрібній позиції
         :param gender: "masculine" або "feminine"
         """
         if gender not in ('masculine', 'feminine'):
             raise ValueError("gender must be 'masculine' or 'feminine'")
-        self.text = text.strip() if text else None
+        self.text = name.strip() if name else None
         self.gender = gender
 
     def decline_all_cases(self) -> dict:
