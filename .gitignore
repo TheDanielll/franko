@@ -1,0 +1,60 @@
+# ─── Node.js ───────────────────────────────────────────────
+# Папка з усіма npm-модулями
+node_modules/
+
+# Логи npm/yarn
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Якщо використовуєш package-lock.json чи yarn.lock,
+# їх можна трекати або ігнорувати за вибором:
+# package-lock.json
+# yarn.lock
+
+# ─── Python ───────────────────────────────────────────────
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Віртуальні оточення
+.venv/
+venv/
+env/
+ENV/
+
+# Пакетні артефакти
+build/
+dist/
+*.egg-info/
+
+# Кеш pytest
+.pytest_cache/
+
+# Коверидж
+htmlcov/
+.coverage
+.coverage.*
+
+# IDE / редактори
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Системні
+.DS_Store
+Thumbs.db
+
+# Файли налаштувань оточення
+.env
+.env.*
+
+# ─── Інші специфічні ───────────────────────────────────────
+# Log-файли
+*.log
+
+# Тимчасові файли
+*.tmp
+*.swp
