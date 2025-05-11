@@ -1,45 +1,88 @@
 // decline.js
 const shevchenko = require('shevchenko');
 
-async function main() {
-  const args = process.argv.slice(2);
-  if (args.length < 1) {
-    console.error('Usage: node decline.js <text…> [masculine|feminine]');
+function parseArgs() {
+  const argv = process.argv.slice(2);
+  if (argv.length === 0) {
+    console.error('Usage: node decline.js <Family?> <Given?> <Patronymic?> [masculine|feminine]');
     process.exit(1);
   }
 
-  // Вибір статі: тільки masculine або feminine
+  // 1) Стать
   let gender = 'masculine';
-  let textArgs = args;
-  const last = args[args.length - 1].toLowerCase();
+  const last = argv[argv.length - 1].toLowerCase();
   if (['masculine', 'feminine'].includes(last)) {
     gender = last;
-    textArgs = args.slice(0, -1);
+    argv.pop();
   }
 
-  // Формуємо текст на вхід
-  const input = textArgs.join(' ');
-  const person = { gender, givenName: input, familyName: '' };
+  // 2) Позиційні аргументи
+  const fields = argv;
+  let familyRaw     = fields[0] || '';
+  let givenRaw      = fields[1] || '';
+  let patronymicRaw = fields[2] || '';
 
-  // Збираємо відмінки
-  const nominative   = input;
-  const genitive     = (await shevchenko.inGenitive(person)).givenName;
-  const dative       = (await shevchenko.inDative(person)).givenName;
-  const accusative   = (await shevchenko.inAccusative(person)).givenName;
-  const instrumental = (await shevchenko.inAblative(person)).givenName;
-  const locative     = (await shevchenko.inLocative(person)).givenName;
-  const vocative     = (await shevchenko.inVocative(person)).givenName;
+  // 3) Нормалізація: "-" => пропуск
+  let family     = familyRaw     !== '-' ? familyRaw     : null;
+  let given      = givenRaw      !== '-' ? givenRaw      : null;
+  let patronymic = patronymicRaw !== '-' ? patronymicRaw : null;
 
-  // Виводимо результат у вигляді JSON
-  console.log(JSON.stringify({
+  // 4) Фолбек: гарантовано маємо given
+  if (!given) {
+    if (patronymic) {
+      given = patronymic;
+      patronymic = null;
+    } else if (family) {
+      given = family;
+      family = null;
+    }
+  }
+
+  if (!given) {
+    console.error('Name is required for declension');
+    process.exit(1);
+  }
+
+  // 5) Створюємо об’єкт person
+  const person = { gender, givenName: given };
+  if (family)     person.familyName     = family;
+  if (patronymic) person.patronymicName = patronymic;
+  return person;
+}
+
+function joinFields(obj) {
+  return [obj.familyName, obj.givenName, obj.patronymicName]
+    .filter(Boolean)
+    .join(' ');
+}
+
+async function main() {
+  const person = parseArgs();
+
+  // Номінатив по безвідмінних полях
+  const nominative = joinFields(person);
+
+  // Викликаємо API
+  const genObj  = await shevchenko.inGenitive(person);
+  const datObj  = await shevchenko.inDative(person);
+  const accObj  = await shevchenko.inAccusative(person);
+  const instObj = await shevchenko.inAblative(person);
+  const locObj  = await shevchenko.inLocative(person);
+  const vocObj  = await shevchenko.inVocative(person);
+
+  // Збираємо результат
+  const output = {
     nominative,
-    genitive,
-    dative,
-    accusative,
-    instrumental,
-    locative,
-    vocative
-  }, null, 2));
+    genitive:     joinFields(genObj),
+    dative:       joinFields(datObj),
+    accusative:   joinFields(accObj),
+    instrumental: joinFields(instObj),
+    locative:     joinFields(locObj),
+    vocative:     joinFields(vocObj),
+  };
+
+
+  console.log(JSON.stringify(output, null, 2));
 }
 
 main().catch(err => {

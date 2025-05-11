@@ -5,5 +5,4 @@ require('esbuild').buildSync({
   platform: 'node',
   target: ['node14'],
   outfile: 'decline.bundle.js',
-  minify: false
 });
