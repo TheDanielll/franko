@@ -67,12 +67,12 @@ if __name__ == "__main__":
         "Александров Даніла Дмитрович",
         "- Тарас Григорович",            # без прізвища
         "Шевченко - Григорович",         # без імені → помилка
-        "Шевченко Тарас -"
+        "Чуєнко Катерина Віталіївна"
     ]
     for text in examples:
         print(f"\n'{text}':")
         try:
-            f = Franko(text, gender="masculine")
+            f = Franko(text, gender="feminine")
             for case, form in f.generate().items():
                 print(f"{case:12}: {form}")
         except Exception as e:
