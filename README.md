@@ -49,7 +49,7 @@ Python code
    # You can call generate() multiple times with different inputs
    for name, gender in [
        ("Шевченко Тарас Григорович", "masculine"),
-       ("Косач Лариса Петрівна", "feminine")
+       ("Чуєнко Катерина Віталіївна", "feminine")
    ]:
        forms = f.generate(name, gender)
        print(forms)
