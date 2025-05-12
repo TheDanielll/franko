@@ -13,7 +13,7 @@ It uses the [shevchenko-js](https://shevchenko-js.tooleks.com/) engine under the
 
 ## Main Components
 1. **`decline.js` / `decline.bundle.js`**  
-   - Parses positional arguments (`<Family?> <Given?> <Patronymic?> [masculine|feminine]`).  
+   - Parses positional arguments (`<Surname> <Name> <Patronymic> [masculine|feminine]`).  
    - Calls the shevchenko-js API to generate all seven Ukrainian cases.  
    - Outputs a formatted JSON object.
 

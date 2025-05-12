@@ -13,7 +13,7 @@ It leverages the shevchenko-js engine under the hood and provides:
 Main Components
 ---------------
 1. **`decline.js` / `decline.bundle.js`**
-   - Parses positional arguments (`<Family?> <Given?> <Patronymic?> [masculine|feminine]`).
+   - Parses positional arguments (`<Surname> <Name> <Patronymic> [masculine|feminine]`).
    - Calls shevchenko-js API to produce all seven Ukrainian cases.
    - Outputs a formatted JSON object.
 
