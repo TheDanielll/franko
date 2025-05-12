@@ -29,10 +29,9 @@ It uses the [shevchenko-js](https://shevchenko-js.tooleks.com/) engine under the
 ## Usage
 
 ### Installation
-From PyPI (when released) and npm:
+From PyPI :
 ```bash
 pip install franko
-npm install shevchenko
 ```
 
 Python code

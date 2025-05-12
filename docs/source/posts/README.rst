@@ -31,13 +31,10 @@ Usage
 
 Installation
 ~~~~~~~~~~~~
-From PyPI (when released) and npm:
+From PyPI :
 .. code-block:: bash
 
     pip install franko
-
-
-    npm install shevchenko
 
 Python API
 ~~~~~~~~~~
