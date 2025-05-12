@@ -42,7 +42,6 @@ jobs:
   build-release:
     name: Build distributions
     needs: lint-and-test
-    if: github.event_name == 'release'
     runs-on: ubuntu-latest
 
     steps:
@@ -67,7 +66,6 @@ jobs:
   publish-pypi:
     name: Publish to PyPI
     needs: build-release
-    if: github.event_name == 'release'
     runs-on: ubuntu-latest
     environment:
       name: pypi_env
