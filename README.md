@@ -29,6 +29,7 @@ It uses the [shevchenko-js](https://shevchenko-js.tooleks.com/) engine under the
 ## Usage
 
 ### Installation
+#### Node.js must be installed
 From PyPI :
 ```bash
 pip install franko

@@ -31,6 +31,8 @@ Usage
 
 Installation
 ~~~~~~~~~~~~
+Node.js must be installed
+
 From PyPI :
 .. code-block:: bash
 
