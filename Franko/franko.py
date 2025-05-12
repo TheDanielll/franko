@@ -2,79 +2,91 @@ import subprocess
 import json
 import shutil
 import os
+from typing import Dict, List
 
 
 class Franko:
     """
-    Клас для відмінювання українських імен та прізвищ за допомогою shevchenko.js.
-    Приймає формат:
-      <прізвище> <ім'я> <по‑батькові>
-    За допомогою "-" можна пропускати окремі поля, наприклад:
-      - Ім'я По-батькові  (без прізвища)
-      Прізвище - По-батькові  (без імені)  # але тоді ім'я обов'язкове
+    A simple interface for Ukrainian name declension using shevchenko.js.
+    Locates Node.js and the bundled JS script on initialization,
+    and provides a generate method to decline names for different inputs.
     """
-    def __init__(self, name: str = None, gender: str = 'masculine'):
-        """
-        :param name: рядок у форматі "прізвище ім'я по-батькові";
-                     для пропуску використовуйте "-" у потрібній позиції
-        :param gender: "masculine" або "feminine"
-        """
-        if gender not in ('masculine', 'feminine'):
-            raise ValueError("gender must be 'masculine' or 'feminine'")
-        self.text = name.strip() if name else None
-        self.gender = gender
 
-    def decline_all_cases(self) -> dict:
-        if not self.text:
+    def __init__(self) -> None:
+        # Locate the Node.js executable once at instance creation
+        self.node_cmd: str = shutil.which("node") or shutil.which("nodejs")  # type: ignore
+        if not self.node_cmd:
+            raise RuntimeError("Node.js not found. Please add 'node' to your PATH.")
+
+        # Determine the path to decline.bundle.js next to this file
+        script_dir: str = os.path.dirname(os.path.abspath(__file__))
+        self.bundle_path: str = os.path.join(script_dir, "decline.bundle.js")
+        if not os.path.isfile(self.bundle_path):
+            raise FileNotFoundError(f"decline.bundle.js not found at: {self.bundle_path}")
+
+    def generate(self, txt: str, gender: str = "masculine") -> Dict[str, str]:
+        """
+        Decline the given Ukrainian full name in all grammatical cases.
+
+        Args:
+            txt: A string in the format "<surname> <given> <patronymic>".
+                 Use "-" to skip a part (e.g. "- Ivan Petrovych").
+            gender: Either "masculine" or "feminine".
+
+        Returns:
+            A dictionary with keys: 'nominative', 'genitive', 'dative',
+            'accusative', 'instrumental', 'locative', 'vocative',
+            mapping to the declined full name.
+
+        Raises:
+            ValueError: If gender is invalid or txt is empty.
+            RuntimeError: If Node.js execution fails.
+            FileNotFoundError: If the JS bundle is missing.
+        """
+        # Validate inputs
+        if gender not in ("masculine", "feminine"):
+            raise ValueError("gender must be 'masculine' or 'feminine'")
+        txt = txt.strip()
+        if not txt:
             raise ValueError("No text provided for declension.")
 
-        # 1. Шукаємо Node.js
-        node_cmd = shutil.which("node") or shutil.which("nodejs")
-        if not node_cmd:
-            raise RuntimeError("Node.js не знайдено. Додайте node до PATH.")
+        # Build the command arguments list
+        name_parts: List[str] = txt.split()
+        cmd: List[str] = [self.node_cmd, self.bundle_path] + name_parts + [gender]
 
-        # 2. Шлях до decline.bundle.js поруч із цим файлом
-        script_dir = os.path.dirname(os.path.abspath(__file__))
-        bundle_path = os.path.join(script_dir, "decline.bundle.js")
-        if not os.path.isfile(bundle_path):
-            raise FileNotFoundError(f"decline.bundle.js не знайдено: {bundle_path}")
-
-        # 3. Розділяємо текст на аргументи та викликаємо JS-бандл
-        name_parts = self.text.split()  # ["Шевченко", "Тарас", "Григорович"]
-        cmd = [node_cmd, bundle_path] + name_parts + [self.gender]
+        # Execute the JS bundle via Node.js
         proc = subprocess.run(
             cmd,
             stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE
+            stderr=subprocess.PIPE,
+            check=False,
         )
         if proc.returncode != 0:
-            err = proc.stderr.decode('utf-8', errors='replace')
-            raise RuntimeError(f"Node.js помилка:\n{err}")
+            error_msg: str = proc.stderr.decode("utf-8", errors="replace")
+            raise RuntimeError(f"Node.js error:\n{error_msg}")
 
-        # 4. Парсимо JSON-вивід
-        out = proc.stdout.decode('utf-8')
+        # Parse and return the JSON output
+        output: str = proc.stdout.decode("utf-8")
         try:
-            return json.loads(out)
+            return json.loads(output)
         except json.JSONDecodeError:
-            raise ValueError(f"Не вдалося розпарсити JSON:\n{out}")
-
-    def generate(self) -> dict:
-        return self.decline_all_cases()
+            raise ValueError(f"Failed to parse JSON output:\n{output}")
 
 
 if __name__ == "__main__":
-    # Приклади використання
-    examples = [
-        "Александров Даніла Дмитрович",
-        "- Тарас Григорович",
-        "Шевченко - Григорович",
-        "Чуєнко Катерина Віталіївна"
+    # Demonstrate multiple calls with one instance
+    fr = Franko()
+    examples: List[tuple] = [
+        ("Александров Даніла Дмитрович", "masculine"),
+        ("- Тарас Григорович", "masculine"),
+        ("Шевченко - Григорович", "masculine"),
+        ("Косач Лариса Петрівна", "feminine")
     ]
-    for text in examples:
-        print(f"\n'{text}':")
+    for text, gender in examples:
+        print(f"\nText: '{text}', Gender: '{gender}'")
         try:
-            f = Franko(text, gender="feminine")
-            for case, form in f.generate().items():
+            forms = fr.generate(text, gender)
+            for case, form in forms.items():
                 print(f"{case:12}: {form}")
         except Exception as e:
             print(f"Error: {e}")
