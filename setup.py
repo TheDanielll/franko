@@ -20,6 +20,8 @@ setup(
             'pytest'
         ]
     },
+    license="MIT",
+    license_files=("LICENSE",),
     classifiers=[
         'Intended Audience :: Developers',
         'Programming Language :: Python :: 3',
@@ -27,6 +29,7 @@ setup(
         'Operating System :: OS Independent',
         'Topic :: Text Processing :: Linguistic',
     ],
+
     include_package_data=True,
     description="Project for declension of Ukrainian names",
     long_description=open("README.md", encoding="utf-8").read(),
