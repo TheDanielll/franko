@@ -5,8 +5,8 @@ import subprocess
 import shutil
 import pytest
 
-# Add project root to Python path to import the Franko module
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+# Add the Franko directory to Python path so tests can import validate.py and franko.py
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'Franko')))
 
 from validate import NameInput
 from franko import Franko
