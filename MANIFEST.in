@@ -1,13 +1,4 @@
-include LICENSE
+include decline.bundle.js
 include README.md
-include setup.py
-
-recursive-include src/franko *.py
-recursive-include src/franko decline.bundle.js
-
-# І виключаємо все інше
-prune tests
-prune docs
-prune .github
-prune build
-
+include LICENSE
+recursive-include Franko decline.bundle.js
