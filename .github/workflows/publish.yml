@@ -42,7 +42,6 @@ jobs:
   build-release:
     name: Build distributions
     needs: lint-and-test
-    if: github.event_name == 'release'
     runs-on: ubuntu-latest
 
     steps:
