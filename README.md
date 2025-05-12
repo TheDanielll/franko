@@ -1,6 +1,7 @@
 # Franko ― Ukrainian Name Declension Library
 
 [![Documentation](https://img.shields.io/badge/Documentation-Read%20The%20Docs-blue.svg)](https://franko.readthedocs.io/en/latest/index.html)
+[![GitHub](https://img.shields.io/badge/GitHub-Read%20The%20Docs-blue.svg)](https://github.com/TheDanielll/franko)
 
 
 ## Description
@@ -38,6 +39,7 @@ pip install franko
 Python code
 
 ```python
+
    from Franko import Franko
 
    # Create a single instance
