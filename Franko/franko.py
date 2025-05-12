@@ -4,6 +4,8 @@ import shutil
 import os
 from typing import Dict, List
 
+from validate import NameInput
+
 
 class Franko:
     """
@@ -43,16 +45,12 @@ class Franko:
             RuntimeError: If Node.js execution fails.
             FileNotFoundError: If the JS bundle is missing.
         """
-        # Validate inputs
-        if gender not in ("masculine", "feminine"):
-            raise ValueError("gender must be 'masculine' or 'feminine'")
-        txt = txt.strip()
-        if not txt:
-            raise ValueError("No text provided for declension.")
 
-        # Build the command arguments list
-        name_parts: List[str] = txt.split()
-        cmd: List[str] = [self.node_cmd, self.bundle_path] + name_parts + [gender]
+        # Validate
+        validated = NameInput(parts=txt, gender=gender)
+
+        # Use validated.parts and validated.gender to build Node.js command
+        cmd: List[str] = [self.node_cmd, self.bundle_path] + validated.parts + [validated.gender]
 
         # Execute the JS bundle via Node.js
         proc = subprocess.run(
@@ -77,8 +75,8 @@ if __name__ == "__main__":
     # Demonstrate multiple calls with one instance
     fr = Franko()
     examples: List[tuple] = [
-        ("Александров Даніла Дмитрович", "masculine"),
-        ("- Тарас Григорович", "masculine"),
+        ("123 Даніла Дмитрович", "masculine"),
+        ("2 Тарас Григорович", "masculine"),
         ("Шевченко - Григорович", "masculine"),
         ("Косач Лариса Петрівна", "feminine")
     ]

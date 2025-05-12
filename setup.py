@@ -14,7 +14,7 @@ setup(
     package_data={
         'Franko': ['decline.bundle.js'],
     },
-    install_requires=["setuptools>=61.0", "wheel"],
+    install_requires=["setuptools>=61.0", "wheel", "pydantic"],
     extras_require={
         'dev_deps ': [
             'pytest'
