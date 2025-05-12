@@ -1,4 +1,4 @@
-__version__ = '25.5.3'
+__version__ = '25.5.4'
 
 from .franko import Franko
 from .validate import NameInput
