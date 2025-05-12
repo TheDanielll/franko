@@ -1,2 +1,3 @@
-# franko
-respect for shevchenko.js
+# Franko Ua
+
+to be continued...

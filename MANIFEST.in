@@ -1,0 +1,4 @@
+include decline.bundle.js
+include README.md
+include LICENSE
+recursive-include Franko decline.bundle.js
