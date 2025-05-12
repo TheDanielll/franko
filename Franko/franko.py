@@ -4,7 +4,7 @@ import shutil
 import os
 from typing import Dict, List
 
-from validate import NameInput
+from Franko.validate import NameInput
 
 
 class Franko:
